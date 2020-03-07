@@ -6,8 +6,6 @@
 //    }
 //});
 
-var tts_sound;
-
 /*whale.tts.speak("컨트롤과 함께 스페이스 바를 누르면 히어뉴스를 실행 및 종료할 수 있습니다.", {
     'lang': 'ko',
     'pitch': 1.5,
@@ -15,26 +13,28 @@ var tts_sound;
     'enqueue': false
 });*/
 
-var init = function(){
-    if(tts_sound != null) tts_sound.pause();
+var kakao_tts_sound;
+
+var kakao_tts_play = function(message) {
+    if(kakao_tts_sound != null) kakao_tts_sound.pause();
         
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.status === 200 || xhr.status === 201) {
             retVal = xhr.responseText;
             var parsedJson = JSON.parse(retVal);
-            tts_sound = new Audio(parsedJson.ttsURL);
-            tts_sound.play();
+            kakao_tts_sound = new Audio(parsedJson.ttsURL);
+            kakao_tts_sound.play();
         } else {
             console.log(xhr.responseText);
         }
     };
     xhr.open('POST', 'https://demo-vox-proxy.i.kakao.com/v1/ttsURL'); // 카카오에서 데모로 제공하는 TTS URL
     xhr.setRequestHeader('Content-Type', 'application/json'); // 컨텐츠타입을 json으로
-    xhr.send('{"text":"컨트롤과 함께 스페이스 바를 누르면 히어뉴스를 실행 및 종료할 수 있습니다.", "engine":"deep", "voiceType":"spring", "toneType":"default", "outputType":"http"}');
+    xhr.send(JSON.stringify({"text":message, "engine":"deep", "voiceType":"naomi", "toneType":"default", "outputType":"http"}));
 }
 
-init();
+kakao_tts_play("컨트롤과 함께 스페이스 바를 누르면 히어뉴스를 실행 및 종료할 수 있습니다.");
 
 whale.storage.local.set({'useExplain' : true});
 // 스토리지에 useExplain 초기화
@@ -155,22 +155,7 @@ whale.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
         });*/
         
-        if(tts_sound != null) tts_sound.pause();
-        
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-            if (xhr.status === 200 || xhr.status === 201) {
-                retVal = xhr.responseText;
-                var parsedJson = JSON.parse(retVal);
-                tts_sound = new Audio(parsedJson.ttsURL);
-                tts_sound.play();
-            } else {
-                console.log(xhr.responseText);
-            }
-        };
-        xhr.open('POST', 'https://demo-vox-proxy.i.kakao.com/v1/ttsURL'); // 카카오에서 데모로 제공하는 TTS URL
-        xhr.setRequestHeader('Content-Type', 'application/json'); // 컨텐츠타입을 json으로
-        xhr.send(JSON.stringify({"text":message, "engine":"deep", "voiceType":"spring", "toneType":"default", "outputType":"http"}));
+        kakao_tts_play(message);
     }
 });
 
@@ -185,21 +170,6 @@ whale.runtime.onConnect.addListener(function(port) {
         });
         whale.storage.local.set({'popupStatus' : false});*/
         
-        if(tts_sound != null) tts_sound.pause();
-        
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-            if (xhr.status === 200 || xhr.status === 201) {
-                retVal = xhr.responseText;
-                var parsedJson = JSON.parse(retVal);
-                tts_sound = new Audio(parsedJson.ttsURL);
-                tts_sound.play();
-            } else {
-                console.log(xhr.responseText);
-            }
-        };
-        xhr.open('POST', 'https://demo-vox-proxy.i.kakao.com/v1/ttsURL'); // 카카오에서 데모로 제공하는 TTS URL
-        xhr.setRequestHeader('Content-Type', 'application/json'); // 컨텐츠타입을 json으로
-        xhr.send('{"text":"히어뉴스를 종료합니다.", "engine":"deep", "voiceType":"spring", "toneType":"default", "outputType":"http"}');
+        kakao_tts_play("히어뉴스를 종료합니다.");
     });
 });
