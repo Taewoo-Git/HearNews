@@ -12,9 +12,13 @@ var classList = document.getElementsByClassName('hdline_article_tit');
 var contentTitle = [];
 var contentLink = [];
 
+var regExpSpec = /\-|\\|\[|\]|\(|\)|\{|\}/;
+// 해당 부분에서도 제목 부분에서 특수문자를 제거하기 위한 코드 추가
+
+
 for(cnt = 0; cnt < classList.length; cnt++){
 
-    contentTitle.push(document.getElementsByClassName('hdline_article_tit')[cnt].querySelector('a').innerText);
+    contentTitle.push(document.getElementsByClassName('hdline_article_tit')[cnt].querySelector('a').innerText.replace(regExpSpec," "));
     contentLink.push("https://news.naver.com" + document.getElementsByClassName('hdline_article_tit')[cnt].querySelector('a').getAttribute('href'));
 
 }

@@ -25,14 +25,17 @@ var article_BodyContents = document.getElementById("articleBodyContents").innerT
 // 기사의 본문 내용 
 var article_ContentsList = article_BodyContents.split("\n\n");
 // 기사의 본문 내용을 문단 별로 나눔
+
 var regExpEmail = /[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/gim;
 // ex) 이메일 검증 정규식
+
 var regExpEmail2 = /[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/gim;
 // ex) 이메일(co.kr 2자리 포함) 검증 정규식
+
 var regExpURL = /(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?/gim;
 var regVideoInfo = /(동영상 뉴스)/;
 
-var regExpSpec = /\-|\\/;
+var regExpSpec = /\-|\\|\[|\]|\(|\)|\{|\}/;
 
 var maxLineCharCnt = 100;
 
@@ -73,8 +76,11 @@ for(cnt = 0; cnt < article_ContentsList.length; cnt++){
     article_ContentsList[cnt] = article_ContentsList[cnt].replace(regExpEmail,"");
     article_ContentsList[cnt] = article_ContentsList[cnt].replace(regExpURL,"");
     article_ContentsList[cnt] = article_ContentsList[cnt].replace(regVideoInfo,"");
+    article_ContentsList[cnt] = article_ContentsList[cnt].replace(regExpSpec," ");
 
-    // 이메일 패턴 등 쓸데 없는 문자를 거름
+
+
+    // 이메일 패턴, 특수문자 등 쓸데 없는 문자를 거름
 
 
 
@@ -113,7 +119,7 @@ for(cnt = 0; cnt < article_ContentsList.length; cnt++){
     // alert(article_ContentsList[cnt]);
 }
 
-article_ContentsList[article_ContentsList.length - 1] = article_ContentsList[article_ContentsList.length - 1].replace(regExpSpec,"");
+article_ContentsList[article_ContentsList.length - 1] = article_ContentsList[article_ContentsList.length - 1].replace(regExpSpec," ");
 // 혹시나 모를 짧은 문단에서 읽게 될 특수 문자 제거
 
 var lastContent = article_ContentsList[article_ContentsList.length - 1].split(/▶|☞|ⓒ|\-/);
@@ -129,6 +135,9 @@ for(cnt = 0; cnt < article_ContentsList.length; cnt++){
     // 공백 문단으로 없어지는 것들 문단 목록에서 삭제
     // alert(article_ContentsList[cnt]);
 }
+
+article_Title = article_Title.replace(regExpSpec, " ");
+// 제목에서도 특수문자 제거
 
 article_ContentsList.unshift(article_Title);
 // 본문 문단 리스트 앞에 타이틀까지 추가
