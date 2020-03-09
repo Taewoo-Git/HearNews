@@ -33,6 +33,7 @@ var regExpEmail2 = /[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+\.[A-Za-z0-9
 // ex) 이메일(co.kr 2자리 포함) 검증 정규식
 
 var regExpURL = /(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?/gim;
+
 var regVideoInfo = /(동영상 뉴스)/;
 
 var regExpSpec = /\-|\\|\[|\]|\(|\)|\{|\}/;
@@ -48,9 +49,7 @@ for(cnt = 0; cnt < article_ContentsList.length; cnt++){
     if(contentTemp != ""){
         article_ContentsList[cnt] = contentTemp + "\n" + article_ContentsList[cnt];    
         if(article_ContentsList[cnt].length < maxLineCharCnt){  
-
             if(cnt != article_ContentsList.length - 1){
-
                 contentTemp = article_ContentsList[cnt];
                 article_ContentsList.splice(cnt,1);
                 // 배열에서 해당 요소를 지운다.
@@ -58,18 +57,15 @@ for(cnt = 0; cnt < article_ContentsList.length; cnt++){
 
                 continue;
             }else if(cnt == article_ContentsList.length - 1){
-
                 article_ContentsList[cnt - 1] = article_ContentsList[cnt - 1] + "\n" + article_ContentsList[cnt];
                 article_ContentsList.splice(cnt, 1);
 
                 cnt = cnt - 1;
                 // 해당 기사의 마지막 문단이면 앞전의 것과 합치고 해당 마지막 문장을 없애버림
-
             }
-
         }else{
             contentTemp = "";
-        }  
+        }
     }
 
     article_ContentsList[cnt] = article_ContentsList[cnt].replace(regExpEmail2,"");
@@ -78,11 +74,7 @@ for(cnt = 0; cnt < article_ContentsList.length; cnt++){
     article_ContentsList[cnt] = article_ContentsList[cnt].replace(regVideoInfo,"");
     article_ContentsList[cnt] = article_ContentsList[cnt].replace(regExpSpec," ");
 
-
-
     // 이메일 패턴, 특수문자 등 쓸데 없는 문자를 거름
-
-
 
     if(article_ContentsList[cnt].length < maxLineCharCnt){
         // 한 문단에서 글자수가 두줄 이상 되지 않을 경우 문단으로 인식하지 않음,
@@ -101,12 +93,8 @@ for(cnt = 0; cnt < article_ContentsList.length; cnt++){
             article_ContentsList.splice(cnt, 1);
             // 해당 기사의 마지막 문단이면 앞전의 것과 합치고 해당 마지막 문장을 없애버림
             cnt = cnt -1;
-
-
         }
-
     }
-
 }
 
 for(cnt = 0; cnt < article_ContentsList.length; cnt++){
@@ -147,40 +135,30 @@ for(cnt = 0; cnt < img_areaCount; cnt++){
 }
 // 사진 숨긴거 다시 보여줌  
 
-
-
-/*
-for(cnt = 0; cnt < vod_areaCount; cnt++){
+/*for(cnt = 0; cnt < vod_areaCount; cnt++){
     document.getElementsByClassName('vod_area')[cnt].style.display = "block";
-}
-*/
+}*/
 
-
-
-// 출력부
-//for(cnt = 0; cnt < article_ContentsList.length; cnt++){
-//    alert(article_ContentsList[cnt]);
-//}
+//출력부
+/*for(cnt = 0; cnt < article_ContentsList.length; cnt++){
+    alert(article_ContentsList[cnt]);
+}*/
 // 본문 문단 영역만 배열에 저장되어 있음
 
-
-
 // 출력부
-//for(cnt = 0; cnt < article_ContentsList.length; cnt++){
-//    alert(article_ContentsList[cnt]);
-//}
+/*for(cnt = 0; cnt < article_ContentsList.length; cnt++){
+    alert(article_ContentsList[cnt]);
+}*/
 // 제목까지 모든거 읽어줌
 
 // 함수에서 도출되는 리턴값 : 제목 글을 포함한 문단 까지 리턴
 
-//////////////////////////////제목 문자열 추가 및 이전 문단, 다음 문단, 다시 듣기 기능/////////////////////////////////////
-
-
+/*===================================================================================================================================================*/
 
 article_ContentsList[0] = "제목, " + article_ContentsList[0];
 
 whale.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message == 'next') {
+    if (message == 'next') {        
         if(vod != null && index == 0){
             whale.runtime.sendMessage("동영상이 있는 기사입니다. 들으시려면 컨트롤과 함께 아랫 방향키를 누르고, 넘어가시려면 컨트롤과 함께 오른쪽 방향키를 눌러주세요.");
             index++;
@@ -223,20 +201,30 @@ whale.runtime.onMessage.addListener((message, sender, sendResponse) => {
             index++;
         }
         else if(vod != null && index == 1) {
-            whale.runtime.sendMessage(" ");
+            whale.runtime.sendMessage("");
             document.querySelector('div#articleBodyContents').prepend(vod);
             document.querySelector('div.vod_area').scrollIntoView();
             vod = null;
             index = 0;
         }
         else {
-            if(document.querySelector('div.vod_area') != null) {
+            /*if(document.querySelector('div.vod_area') != null) {
                 vod_btn = document.querySelector('div.vod_area').querySelector('iframe').contentWindow.document.querySelector('button.u_rmc_pause_btn');
             }
             if(vod_btn != null) vod_btn.click();
             
             if(index == 0) whale.runtime.sendMessage("다시 들을 문단을 선택하세요.");
-            else whale.runtime.sendMessage(article_ContentsList[index-1]);
+            else whale.runtime.sendMessage(article_ContentsList[index-1]);*/
+            
+            //document.querySelector('div.tts_svc').querySelector('button.tts_voice').click();
+            
+            var full_article = "";
+            
+            for(cnt = 0; cnt < article_ContentsList.length; cnt++){
+                full_article = full_article + article_ContentsList[cnt];
+            }
+            
+            whale.runtime.sendMessage(full_article);
         }
     }
     else if(message == 'back') {

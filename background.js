@@ -13,22 +13,30 @@
     'enqueue': false
 });*/
 
-var kakao_tts_sound;
+var kakao_tts_sound = new Audio();
 
 var kakao_tts_play = function(message) {
     if(kakao_tts_sound != null) kakao_tts_sound.pause();
-        
+    
     var xhr = new XMLHttpRequest();
+    
     xhr.onload = function () {
-        if (xhr.status === 200 || xhr.status === 201) {
-            retVal = xhr.responseText;
-            var parsedJson = JSON.parse(retVal);
-            kakao_tts_sound = new Audio(parsedJson.ttsURL);
-            kakao_tts_sound.play();
+        if(xhr.status === 200 || xhr.readyState === 4) {
+            kakao_tts_sound.src = JSON.parse(xhr.responseText).ttsURL;
+            var promise = kakao_tts_sound.play();
+            
+            if(promise !== undefined) {
+                promise.then(_ => {
+                    kakao_tts_sound.play();
+                }).catch(error => {
+                    kakao_tts_sound.pause();
+                });
+            }
         } else {
             console.log(xhr.responseText);
         }
     };
+    
     xhr.open('POST', 'https://demo-vox-proxy.i.kakao.com/v1/ttsURL'); // 카카오에서 데모로 제공하는 TTS URL
     xhr.setRequestHeader('Content-Type', 'application/json'); // 컨텐츠타입을 json으로
     xhr.send(JSON.stringify({"text":message, "engine":"deep", "voiceType":"naomi", "toneType":"default", "outputType":"http"}));
@@ -51,9 +59,9 @@ var explain = [
     
         "컨트롤과 함께 오른쪽, 왼쪽 방향키를 눌러 분야를 선택하세요. 컨트롤과 함께 아랫 방향키를 누르면 해당 분야로 이동합니다. 네이버 뉴스로 돌아가려면 컨트롤과 함께 윗 방향키를 눌러주세요.",
     
-        "컨트롤과 함께 오른쪽, 왼쪽 방향키를 눌러 기사 제목을 선택하세요. 컨트롤과 알트 그리고 오른쪽, 왼쪽 방향키를 함께 누르면 페이지 내 마지막과 처음 기사를 선택할 수 있습니다. 컨트롤과 함께 아랫 방향키를 누르면 해당 기사의 본문으로 이동합니다. 다른 분야를 선택하려면 컨트롤과 함께 윗 방향키를 눌러주세요.",
+        "컨트롤과 함께 오른쪽, 왼쪽 방향키를 눌러 제목을 선택하세요. 컨트롤과 알트 그리고 오른쪽, 왼쪽 방향키를 함께 누르면 페이지 내 마지막과 처음 기사를 선택할 수 있습니다. 컨트롤과 함께 아랫 방향키를 누르면 해당 기사의 본문으로 이동합니다. 다른 분야를 선택하려면 컨트롤과 함께 윗 방향키를 눌러주세요.",
     
-        "컨트롤과 함께 오른쪽 방향키를 누르면 다음 문단, 컨트롤과 함께 왼쪽 방향키를 누르면 이전 문단으로 이동합니다. 해당 문단을 다시 들으려면 컨트롤과 함께 아랫 방향키를 눌러주세요. 다른 기사를 선택하려면 컨트롤과 함께 윗 방향키를 눌러주세요."
+        "컨트롤과 함께 오른쪽 방향키를 누르면 다음 문단. 컨트롤과 함께 왼쪽 방향키를 누르면 이전 문단으로 이동합니다. 기사 전체를 한 번에 들으려면 컨트롤과 함께 아랫 방향키를 눌러주세요. 다른 기사를 선택하려면 컨트롤과 함께 윗 방향키를 눌러주세요."
 ];
 
 var intro = function() {
@@ -142,7 +150,7 @@ whale.runtime.onMessage.addListener((message, sender, sendResponse) => {
             
             else if(message.includes('read.nhn')) {
                 views[i].document.getElementById('popup_ctrl').innerHTML ="<b>Ctrl + →<p>Ctrl +  ←<p>Ctrl + ↓<p>Ctrl + ↑<p>Ctrl + Space<p>Space Bar</b>";
-                views[i].document.getElementById('popup_text').innerHTML = " <b>다음 문단<p>이전 문단<p>다시 듣기<p>기사 목록으로 이동<p>히어뉴스 실행/종료<p>음성 매뉴얼 종료/실행</b>";
+                views[i].document.getElementById('popup_text').innerHTML = " <b>다음 문단<p>이전 문단<p>한 번에 듣기<p>기사 목록으로 이동<p>히어뉴스 실행/종료<p>음성 매뉴얼 종료/실행</b>";
             }
         }
     }
@@ -152,7 +160,6 @@ whale.runtime.onMessage.addListener((message, sender, sendResponse) => {
             'pitch': 1.5,
             'rate': 1.5,
             'enqueue': false
-
         });*/
         
         kakao_tts_play(message);
@@ -166,10 +173,12 @@ whale.runtime.onConnect.addListener(function(port) {
             'pitch': 1.5,
             'rate': 1.5,
             'enqueue': false
-
-        });
-        whale.storage.local.set({'popupStatus' : false});*/
+        });*/
         
         kakao_tts_play("히어뉴스를 종료합니다.");
+        
+        whale.storage.local.set({'popupStatus' : false});
+        
+        whale.storage.local.set({'savedIndex' : 0});
     });
 });
