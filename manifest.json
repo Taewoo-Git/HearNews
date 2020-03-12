@@ -4,6 +4,10 @@
     "description": "뉴스를 들려주는 확장앱, 히어뉴스!",
     "version": "1.1",
     
+    "icons": {
+            "128": "res/ico/HEARNEWS_ICON.png"
+    },
+    
     "browser_action": {
         "default_icon": {
             "16": "res/ico/HEARNEWS_ICON_16.png", 
