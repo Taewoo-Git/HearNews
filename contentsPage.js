@@ -36,7 +36,7 @@ var regExpURL = /(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)
 
 var regVideoInfo = /(동영상 뉴스)/;
 
-var regExpSpec = /\-|\\|\[|\]|\(|\)|\{|\}/;
+var regExpSpec = /\-|\\|\[|\]|\(|\)|\{|\}/gim;
 
 var maxLineCharCnt = 100;
 
@@ -72,7 +72,7 @@ for(cnt = 0; cnt < article_ContentsList.length; cnt++){
     article_ContentsList[cnt] = article_ContentsList[cnt].replace(regExpEmail,"");
     article_ContentsList[cnt] = article_ContentsList[cnt].replace(regExpURL,"");
     article_ContentsList[cnt] = article_ContentsList[cnt].replace(regVideoInfo,"");
-    article_ContentsList[cnt] = article_ContentsList[cnt].replace(regExpSpec," ");
+    article_ContentsList[cnt] = article_ContentsList[cnt].replace(regExpSpec,". ");
 
     // 이메일 패턴, 특수문자 등 쓸데 없는 문자를 거름
 
@@ -107,7 +107,7 @@ for(cnt = 0; cnt < article_ContentsList.length; cnt++){
     // alert(article_ContentsList[cnt]);
 }
 
-article_ContentsList[article_ContentsList.length - 1] = article_ContentsList[article_ContentsList.length - 1].replace(regExpSpec," ");
+article_ContentsList[article_ContentsList.length - 1] = article_ContentsList[article_ContentsList.length - 1].replace(regExpSpec,". ");
 // 혹시나 모를 짧은 문단에서 읽게 될 특수 문자 제거
 
 var lastContent = article_ContentsList[article_ContentsList.length - 1].split(/▶|☞|ⓒ|\-/);
@@ -124,7 +124,7 @@ for(cnt = 0; cnt < article_ContentsList.length; cnt++){
     // alert(article_ContentsList[cnt]);
 }
 
-article_Title = article_Title.replace(regExpSpec, " ");
+article_Title = article_Title.replace(regExpSpec, ". ");
 // 제목에서도 특수문자 제거
 
 article_ContentsList.unshift(article_Title);

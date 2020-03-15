@@ -38,6 +38,7 @@ whale.runtime.onMessage.addListener((message, sender, sendResponse) => {
         }
     }
     else if(message == 'back') {
+        whale.runtime.sendMessage("");
         history.back();
     }
 });

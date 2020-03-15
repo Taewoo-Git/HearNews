@@ -15,7 +15,7 @@ var contentLink = [];
 var contentObject = [];
 
 
-var regExpSpec = /\-|\\|\[|\]|\(|\)|\{|\}/;
+var regExpSpec = /\-|\\|\[|\]|\(|\)|\{|\}/gim;
 // 해당 부분에서도 제목 부분에서 특수문자를 제거하기 위한 코드 추가
 
 
@@ -31,7 +31,8 @@ if(getUrl[0] == 'https://news.naver.com/main/list.nhn') {
         var dtCount = document.querySelectorAll('dl')[cnt].querySelectorAll('dt').length-1;
         // dt 태그 갯수중 마지막 요소를 가져오기 위한 갯수 카운트
 
-        contentTitle.push(document.querySelectorAll('dl')[cnt].querySelectorAll('dt')[dtCount].innerText.replace(regExpSpec," "));
+        contentTitle.push(document.querySelectorAll('dl')[cnt].querySelectorAll('dt')[dtCount].innerText.replace(regExpSpec,". "));
+        
         contentLink.push(document.querySelectorAll('dl')[cnt].querySelector('a').getAttribute('href'));
         
         contentObject.push(document.querySelectorAll('dl')[cnt].querySelectorAll('dt')[dtCount]);
@@ -47,7 +48,8 @@ else if(getUrl[0] == 'https://news.naver.com/main/ranking/popularDay.nhn') {
 
     for(cnt = 0; cnt < contentList.length; cnt++){
 
-        contentTitle.push(document.getElementsByClassName('ranking_headline')[cnt].querySelector('a').innerText.replace(regExpSpec," "));
+        contentTitle.push(document.getElementsByClassName('ranking_headline')[cnt].querySelector('a').innerText.replace(regExpSpec,". "));
+        
         contentLink.push("https://news.naver.com" +  document.getElementsByClassName('ranking_headline')[cnt].querySelector('a').getAttribute('href'));
         
         contentObject.push(document.getElementsByClassName('ranking_headline')[cnt].querySelector('a'));
