@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "HearNews",
     "description": "뉴스를 들려주는 확장앱, 히어뉴스!",
-    "version": "1.1",
+    "version": "1.2",
     
     "icons": {
             "128": "res/ico/HEARNEWS_ICON.png"
@@ -13,7 +13,7 @@
             "16": "res/ico/HEARNEWS_ICON_16.png", 
             "32": "res/ico/HEARNEWS_ICON_32.png"
         },
-        "default_title": "HEAR NEWS", 
+        "default_title": "HearNews", 
         "default_popup": "popup.html"
     },
     
@@ -58,15 +58,19 @@
       "run_at": "document_end"
     }
     ],
-    
+        
     "commands": {
         "_execute_browser_action": {
             "suggested_key": {
-                "default": "Ctrl+Space"
+                "default": "Ctrl+Space",
+                "windows": "Ctrl+Space",
+                "mac": "Command+Space",
+                "chromeos": "Ctrl+Space",
+                "linux": "Ctrl+Space"
             },
-        "description": "Move to Home"
+            "description": "Home_Key"
         }
     },
-    
-    "permissions": ["tts", "tabs", "history", "storage"]
+        
+    "permissions": ["background", "tts", "tabs", "history", "storage"]
 }
